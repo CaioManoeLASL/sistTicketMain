@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de estacionamento</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/kute.js@2.1.2/dist/kute.min.js"></script>
+  </head>
+  <body>
+    <div class="background">
+      <div class="wave-container wave-top">
+        <div class="wave"></div>
+        <div class="wave flip"></div>
+      </div>
+      <div class="blob-backgrond">
+        <svg
+          id="visual"
+          viewBox="0 0 400 400"
+          width="400"
+          height="400"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          version="1.1"
+        >
+          <g transform="translate(199.73771869444602 181.52584968817837)">
+            <path
+              id="blob1"
+              d="M61.7 -86.4C73.5 -76.2 72.4 -49.7 82.8 -25.2C93.2 -0.6 115.1 21.9 122.8 52.8C130.5 83.6 124 122.7 101.2 128C78.4 133.2 39.2 104.6 1.7 102.3C-35.9 100 -71.7 124 -94.9 118.9C-118 113.7 -128.4 79.4 -124.6 50.2C-120.8 20.9 -102.7 -3.3 -87 -21.1C-71.3 -38.8 -58 -50.2 -43.9 -59.6C-29.8 -69 -14.9 -76.5 5 -83.4C24.9 -90.2 49.8 -96.5 61.7 -86.4"
+              fill="#27001c"
+            ></path>
+          </g>
+          <g
+            transform="translate(220.4683951246538 182.35488421938464)"
+            style="visibility: hidden"
+          >
+            <path
+              id="blob2"
+              d="M57.3 -75.5C85.2 -58.6 126.3 -56.5 131.3 -42.4C136.3 -28.2 105.3 -2.1 90.5 25.1C75.7 52.2 77.2 80.3 64.9 106.1C52.5 131.9 26.3 155.5 -3 159.6C-32.3 163.8 -64.7 148.7 -96.4 129.1C-128.1 109.6 -159.1 85.7 -169.1 55C-179.1 24.2 -168 -13.4 -144.3 -34.6C-120.5 -55.8 -84 -60.7 -57.9 -78.2C-31.7 -95.7 -15.9 -125.8 -0.6 -125C14.7 -124.2 29.4 -92.5 57.3 -75.5"
+              fill="#27001c"
+            ></path>
+          </g>
+          <g
+            transform="translate(202.8246778849827 222.62370862716585)"
+            style="visibility: hidden"
+          >
+            <path
+              id="blob3"
+              d="M57.5 -79.4C79.6 -63 106.4 -53.1 124.1 -32.4C141.7 -11.6 150.3 20 139.2 42.6C128.2 65.1 97.6 78.7 71.1 85.9C44.7 93.2 22.3 94.1 0.1 93.9C-22.1 93.8 -44.3 92.6 -76 87.1C-107.7 81.5 -148.9 71.7 -149.8 52.6C-150.6 33.5 -111 5.1 -96.7 -29.2C-82.4 -63.5 -93.5 -103.7 -81.6 -123.5C-69.8 -143.3 -34.9 -142.7 -8.6 -130.8C17.6 -118.9 35.3 -95.9 57.5 -79.4"
+              fill="#27001c"
+            ></path>
+          </g>
+        </svg>
+      </div>
+      <div class="wave-container wave-bottom">
+        <div class="wave"></div>
+        <div class="wave flip"></div>
+      </div>
+    </div>
+
+    <div id="playButton" class="play-button">▶</div>
+
+    <div id="container">
+      <h1>Sistema de estacionamento</h1>
+      <div class="content-layout">
+        <div class="forms-column">
+          <form id="formEntrada">
+            <h2>Entrada</h2>
+            <input type="text" id="placaEntrada" placeholder="placa (Ex: ABC1D23)" required/>
+            <input type="text" id="horaEntrada" class="time-pickable" placeholder="Hora (Ex 10:00)" required/>
+            <button id="adicionar" type="button">Registrar Entrada</button>
+          </form>
+          <form id="formSaida">
+            <h2>Saída</h2>
+            <input type="text" id="placaSaida" placeholder="placa (Ex: ABC1D23)" required/>
+            <input type="text" id="horaSaida" class="time-pickable" placeholder="Hora (Ex 10:00)" required/>
+            <button id="remove" type="button">Registrar Saída</button>
+          </form>
+        </div>
+
+        <div class="ticket-matrix-column">
+          <div id="ticket">Placa: ... | Estado: ...</div>
+          <table id="parkingMatrix">
+            <caption>
+              Estacionamento (Matrix)
+            </caption>
+            <thead>
+              <tr>
+                <th>Coluna 1</th>
+                <th>Coluna 2</th>
+                <th>Coluna 3</th>
+                <th>Coluna 4</th>
+                <th>Coluna 5</th>
+              </tr>
+            </thead>
+            <tbody id="matrixBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
