@@ -1,10 +1,11 @@
+import { generateTicketPdf } from "./ticketPDF.js";
+
 const rows = 5;
 const cols = 5;
 let parkingLot = Array.from(Array(rows), () => Array(cols).fill(null));
 
 const tarifaBase = 25.00; //até 3 hora
 const tarifaAdicional = 15.00; // por hora extra
-const tolerancia = 15; // minutos
 
 const estados = {
     'DF' : ['JJK', 'JKL', 'JLL'],
@@ -31,7 +32,7 @@ export function adicionarCarro() {
             if (parkingLot[i][j] === null) {
                 parkingLot[i][j] = { placa, horaEntrada, estado };
                 atualizarMatriz();
-                document.getElementById("ticket").innerText = `Entrada registrada! Placa: ${placa} | Estado: ${estado}`;
+                document.getElementById("ticket-button").innerText = `Entrada registrada! Placa: ${placa} | Estado: ${estado}`;
                 return;
             }
         }
@@ -59,6 +60,7 @@ export function removerCarro(){
                 if (valor === null) return alert("Hora de saída deve ser maior que a da entrada");
                 parkingLot[i][j] = null;
                 mostrarTicket(placa, valor);
+                generateTicketPdf(placa, valor);
                 atualizarMatriz();
                 return;
             }
@@ -97,14 +99,23 @@ function calcularTarifa(horaEntrada, horaSaida) {
     if (saida <= entrada) return null;
 
     const minutosTotais = Math.ceil((saida - entrada) / (1000 * 60));
-    if (minutosTotais <= tolerancia) return 0;
 
-    const horasTotais = Math.ceil((minutosTotais - tolerancia) / 60);
-    return horasTotais <= 3 ? tarifaBase : tarifaBase + (horasTotais - 3) * tarifaAdicional;
+    const limiteBase = 3 * 60 + 15
+    
+    if (minutosTotais <= limiteBase) {
+        return tarifaBase;
+    }
+    
+    const minutosExcedentes = minutosTotais - limiteBase;
+    console.log(minutosExcedentes);
+    const horasExtras = Math.ceil((minutosExcedentes + 10) / 60);
+    console.log(horasExtras);
+
+    return tarifaBase + horasExtras * tarifaAdicional;
 }
 
 function mostrarTicket(placa, valor) {
-    document.getElementById("ticket").innerText = `Placa: ${placa} | Valor a pagar: R$${valor.toFixed(2)}`;
+    document.getElementById("ticket-button").innerText = `Placa: ${placa} | Valor a pagar: R$${valor.toFixed(2)}`;
 }
 
 function verificarEstado(placa) {
