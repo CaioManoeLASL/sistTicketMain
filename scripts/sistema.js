@@ -8,10 +8,25 @@ const tarifaBase = 25.00; //até 3 hora
 const tarifaAdicional = 15.00; // por hora extra
 
 const estados = {
-    'DF' : ['JJK', 'JKL', 'JLL'],
-    'GO' : ['JKK', 'JLM', 'JMK'],
-    'MG' : ['JJL', 'JKM', 'JKJ']
+    'DF' : gerarIntervalo('JHA', 'JHZ'),
+    'GO' : gerarIntervalo('JID', 'JJD'),
+    'MG' : gerarIntervalo('GAA', 'GKI')
 };
+
+function gerarIntervalo(inicio, fim) {
+    const resultado = [];
+    const start = inicio.charCodeAt(2);
+    const end = fim.charCodeAt(2);
+
+    for (let i = inicio.charCodeAt(0); i <= fim.charCodeAt(0); i++) {
+        for (let j = inicio.charCodeAt(1); j <= fim.charCodeAt(1); j++) {
+            for (let k = start; k <= end; k++) {
+                resultado.push(String.fromCharCode(i, j, k));
+            }
+        }
+    }
+    return resultado;
+}
 
 export function adicionarCarro() {
     const placa = document.getElementById("placaEntrada").value.toUpperCase();
@@ -32,7 +47,7 @@ export function adicionarCarro() {
             if (parkingLot[i][j] === null) {
                 parkingLot[i][j] = { placa, horaEntrada, estado };
                 atualizarMatriz();
-                document.getElementById("ticket-button").innerText = `Entrada registrada! Placa: ${placa} | Estado: ${estado}`;
+                document.getElementById("ticket").innerText = `Entrada registrada! Placa: ${placa} | Estado: ${estado}`;
                 return;
             }
         }
@@ -56,8 +71,20 @@ export function removerCarro(){
         for (let j = 0; j < cols; j++) {
             const carro = parkingLot[i][j];
             if (carro && carro.placa === placa) {
+
+                const entrada = new Date(`1970-01-01T${carro.horaEntrada}:00`);
+                const minutosTotais = Math.ceil((horaSaidaDate - entrada) / (1000 * 60));
+
+                if (minutosTotais <= 15) {
+                    parkingLot[i][j] = null;
+                    atualizarMatriz();
+                    alert("Carro saiu dentro dos 15 minutos dos 15 minutos gratuitos. Sem cobrança");
+                    return;
+                }
+
                 const valor = calcularTarifa(carro.horaEntrada, horaSaida);
                 if (valor === null) return alert("Hora de saída deve ser maior que a da entrada");
+
                 parkingLot[i][j] = null;
                 mostrarTicket(placa, valor);
                 generateTicketPdf(placa, valor);
@@ -100,7 +127,7 @@ function calcularTarifa(horaEntrada, horaSaida) {
 
     const minutosTotais = Math.ceil((saida - entrada) / (1000 * 60));
 
-    const limiteBase = 3 * 60 + 15
+    const limiteBase = 3 * 60;
     
     if (minutosTotais <= limiteBase) {
         return tarifaBase;
@@ -108,14 +135,14 @@ function calcularTarifa(horaEntrada, horaSaida) {
     
     const minutosExcedentes = minutosTotais - limiteBase;
     console.log(minutosExcedentes);
-    const horasExtras = Math.ceil((minutosExcedentes + 10) / 60);
+    const horasExtras = Math.ceil((minutosExcedentes) / 60);
     console.log(horasExtras);
 
     return tarifaBase + horasExtras * tarifaAdicional;
 }
 
 function mostrarTicket(placa, valor) {
-    document.getElementById("ticket-button").innerText = `Placa: ${placa} | Valor a pagar: R$${valor.toFixed(2)}`;
+    document.getElementById("ticket").innerText = `Placa: ${placa} | Valor a pagar: R$${valor.toFixed(2)}`;
 }
 
 function verificarEstado(placa) {

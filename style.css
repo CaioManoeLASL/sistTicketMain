@@ -103,7 +103,6 @@ h1, h2, caption{
     margin-bottom: 10px;
 }
 
-
 .content-layout {
     display: flex;
     gap: 20px;
@@ -186,8 +185,7 @@ button {
     background-color: #d03163;
 }
 
-#ticket-button {
-    cursor: pointer;
+#ticket {
     margin: 20px 0;
     padding: 10px;
     border: 1px solid #ddd;
